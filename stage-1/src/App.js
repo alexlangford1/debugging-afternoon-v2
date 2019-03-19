@@ -2,48 +2,48 @@ import React, { Component } from "react";
 import StoreFront from "./Components/StoreFront/StoreFront";
 import ShoppingCart from "./Components/ShoppingCart/ShoppingCart";
 import NavBar from "./Components/NavBar/NavBar";
-
+import axios from 'axios'
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       products: [],
       cart: [],
-      showCart: false
+      showCart: false,
     };
     this.addToCart = this.addToCart.bind(this);
     this.removeFromCart = this.removeFromCart.bind(this);
     this.navigate = this.navigate.bind(this);
   }
   componentDidMount() {
-    axios
+   axios
       .get("https://practiceapi.devmountain.com/products/")
-      .then(response => {
+      .then((response) => {
         this.setState({
-          products: response.data
+          products: response.data,
         });
       });
   }
-  addToCart(item) {
+  addToCart = (item) => {
     this.setState({
-      cart: [...this.state.cart, item]
+      cart: [...this.state.cart, item],
     });
   }
   removeFromCart(index) {
     let cartCopy = this.state.cart.slice();
     cartCopy.splice(index, 1);
     this.setState({
-      cart: cartCopy
+      cart: cartCopy,
     });
   }
   navigate(location) {
     if (location === "cart") {
       this.setState({
-        showCart: true
+        showCart: true,
       });
     } else {
       this.setState({
-        showCart: false
+        showCart: false,
       });
     }
   }
@@ -54,9 +54,9 @@ class App extends Component {
         <NavBar navigate={this.navigate} />
         <div className="main-container">
           {showCart ? (
-            <ShoppingCart cart={cart} />
+            <ShoppingCart cart={this.state.cart} removeFromCart={this.removeFromCart}/>
           ) : (
-            <StoreFront products={products} />
+            <StoreFront products={products} addToCart={this.addToCart} />
           )}
         </div>
       </div>
